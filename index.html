@@ -258,6 +258,41 @@
                 margin-top: 80px;
             }
         }
+        /* Estilos para el menú móvil */
+        @media (max-width: 768px) {
+    .nav-menu.active {
+        background-color: #ffffff;
+        padding: 0.5rem 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: absolute;
+        top: 70px; /* Ajustado para estar más arriba */
+        left: 0;
+        width: 100%;
+    }
+
+    .nav-menu .nav-item {
+        text-align: center;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-menu .nav-item a {
+        display: block;
+        padding: 0.6rem 0; /* Reducido el padding vertical */
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    .nav-menu .nav-item a:hover {
+        background-color: #f8f9fa;
+    }
+
+    .nav-menu {
+        margin-top: -2px !important;
+        padding-top: -2px !important;
+    }
+}
     </style>
 </head>
 <body>
