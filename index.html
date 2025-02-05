@@ -293,6 +293,123 @@
         padding-top: -2px !important;
     }
 }
+
+/* Estilos para el área de mensajes del chatbot */
+#chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    max-height: calc(100% - 200px); /* Calcula altura restante para evitar cortes */
+    scrollbar-width: thin;
+    scrollbar-color: #375576 #f1f1f1;
+}
+
+#chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: #375576;
+    border-radius: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #2a4159;
+}
+
+/* Estilos para el contenedor de opciones */
+.options-container {
+    display: none;
+    padding: 15px;
+   
+    background: white;
+    border-top: 1px solid #eee;
+    max-height: 130px;
+    width: 100%; /* Ocupa todo el ancho del chatbot */
+    overflow-y: auto;
+    position: relative;
+    z-index: 1000;
+}
+.options-container.show {
+    display: block;
+}
+
+.options-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.options-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.options-container::-webkit-scrollbar-thumb {
+    background: #375576;
+    border-radius: 4px;
+}
+
+.options-container::-webkit-scrollbar-thumb:hover {
+    background: #2a4159;
+}
+
+/* Ajuste para el contenedor principal del chatbot */
+#chatbot-window {
+    display: none;
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 300px;
+    height: 600px; /* Altura aumentada para mejor contenido */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Asegurarse que el botón de expandir siempre esté visible */
+.expand-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 1001; /* Mayor z-index que el contenedor de opciones */
+    background-color: #375576;
+    color: white;
+    border: none;
+   ;
+    width: 200px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.option-button {
+    background-color: #55708e;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
     </style>
 </head>
 <body>
@@ -312,7 +429,7 @@
             </ul>
         </div>
     </nav>
-<!-- Chatbot Container -->
+    <!-- Chatbot Container -->
 <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
     <!-- Botón del chatbot -->
     <button id="chatbot-button" style="width: 60px; height: 60px; border-radius: 50%; background-color: #375576; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
@@ -320,7 +437,7 @@
     </button>
 
     <!-- Ventana del chatbot -->
-    <div id="chatbot-window" style="display: none; position: absolute; bottom: 80px; right: 0; width: 300px; height: 400px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden;">
+    <div id="chatbot-window" style="display: none; position: absolute; bottom: 80px; right: 0; width: 300px; height: 400px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column;">
         <!-- Header del chatbot -->
         <div style="background: #375576; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
             <span>Asistente Virtual</span>
@@ -330,95 +447,149 @@
         </div>
 
         <!-- Área de mensajes -->
-        <div id="chat-messages" style="height: 300px; overflow-y: auto; padding: 15px;"></div>
+        <div id="chat-messages" style="flex: 1; overflow-y: auto; padding: 15px;"></div>
 
-        <!-- Área de opciones -->
-        <div id="chat-options" style="padding: 15px; border-top: 1px solid #eee;">
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                <button class="option-button" onclick="selectOption(1)" style="padding: 8px 12px; background: #f0f0f0; border: none; border-radius: 15px; cursor: pointer;">Trámites</button>
-                <button class="option-button" onclick="selectOption(2)" style="padding: 8px 12px; background: #f0f0f0; border: none; border-radius: 15px; cursor: pointer;">Horarios</button>
-                <button class="option-button" onclick="selectOption(3)" style="padding: 8px 12px; background: #f0f0f0; border: none; border-radius: 15px; cursor: pointer;">Costos</button>
-                <button class="option-button" onclick="selectOption(4)" style="padding: 8px 12px; background: #f0f0f0; border: none; border-radius: 15px; cursor: pointer;">Documentación</button>
-            </div>
+        <!-- Área de entrada de texto -->
+        <div id="chat-input" style="padding: 15px; border-top: 1px solid #eee; display: flex; gap: 10px;">
+            
+               
+            
+        </div>
+
+        <!-- Botón para mostrar opciones -->
+        <button class="expand-button" onclick="toggleOptions()">
+            Ver opciones disponibles <i class="fas fa-chevron-down"></i>
+        </button>
+
+        <!-- Contenedor de opciones -->
+        <div id="options-container" class="options-container">
+            <button class="option-button" onclick="insertKeyword('certificación de firmas')">Certificación de firmas</button>
+            <button class="option-button" onclick="insertKeyword('autentificación de fotocopias')">Autentificación de fotocopias</button>
+            <button class="option-button" onclick="insertKeyword('división de condominio')">División de condominio</button>
+            <button class="option-button" onclick="insertKeyword('autorizaciones a menores')">Autorizaciones a menores</button>
+            <button class="option-button" onclick="insertKeyword('autorizaciones para conducir')">Autorizaciones para conducir</button>
+            <button class="option-button" onclick="insertKeyword('escrituración')">Escrituración</button>
+            <button class="option-button" onclick="insertKeyword('registro de títulos')">Registro de títulos</button>
+            <button class="option-button" onclick="insertKeyword('asesoramiento jurídico')">Asesoramiento jurídico</button>
+            <button class="option-button" onclick="insertKeyword('horarios')">Horarios de atención</button>
+            <button class="option-button" onclick="insertKeyword('telefono')">Teléfono de contacto</button>
+            <button class="option-button" onclick="insertKeyword('direccion')">Dirección</button>
         </div>
     </div>
 </div>
 
 <script>
-    const chatbotButton = document.getElementById('chatbot-button');
-    const chatbotWindow = document.getElementById('chatbot-window');
-    const closeButton = document.getElementById('close-chatbot');
-    const chatMessages = document.getElementById('chat-messages');
+      const chatbotButton = document.getElementById('chatbot-button');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const closeButton = document.getElementById('close-chatbot');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const optionsContainer = document.getElementById('options-container');
 
-    // Base de datos de respuestas
-    const respuestas = {
-        1: {
-            titulo: "Trámites frecuentes:",
-            contenido: "• Escrituras de compraventa\n• Certificación de firmas\n• Poderes\n• Actas notariales\n• Autorizaciones de viaje"
-        },
-        2: {
-            titulo: "Horarios de atención:",
-            contenido: "Lunes a Viernes: 9:00 - 18:00\nSábados: 9:00 - 13:00\nDomingos: Cerrado"
-        },
-        3: {
-            titulo: "Información sobre costos:",
-            contenido: "Los costos varían según el tipo de trámite. Contáctenos para recibir un presupuesto personalizado."
-        },
-        4: {
-            titulo: "Documentación necesaria:",
-            contenido: "Para cualquier trámite es necesario:\n• DNI original\n• CUIT/CUIL\n• Documentación específica según el trámite"
-        }
+         // Asegurarse de que el chatbot esté oculto al inicio
+         chatbotWindow.style.display = 'none';
+    // Base de datos de palabras clave y respuestas
+    const palabrasClaveRespuestas = {
+        "certificación de firmas": "Para certificación de firmas necesitas:\n• DNI original y copia\n• Documento a certificar\n• Presencia física de la persona",
+        "autentificación de fotocopias": "Para autentificar fotocopias necesitas:\n• Documento original\n• Fotocopias a certificar\n• DNI del solicitante",
+        "división de condominio": "Para división de condominio necesitas:\n• Título de propiedad original\n• DNI de todos los condóminos\n• Certificado catastral\n• Plano de mensura",
+        "autorizaciones a menores": "Para autorizaciones a menores necesitas:\n• DNI del menor\n• DNI de ambos padres\n• Partida de nacimiento del menor\n• Presencia de ambos padres",
+        "autorizaciones para conducir": "Para autorización de manejo necesitas:\n• DNI del autorizado y autorizante\n• Licencia de conducir vigente del autorizante\n• Título del vehículo\n• Seguro vigente",
+        "escrituración": "Para escrituración necesitas:\n• DNI de las partes\n• Título de propiedad\n• Certificado de dominio\n• Certificado de inhibición\n• Impuestos al día",
+        "registro de títulos": "Para registrar títulos necesitas:\n• Título original\n• DNI del titular\n• Formularios de registro\n• Pago de tasas correspondientes",
+        "asesoramiento jurídico": "Para asesoramiento jurídico notarial:\n• Agenda una cita previa\n• Trae documentación relacionada al caso\n• DNI del consultante",
+        "horarios": "Nuestros horarios de atención son:\nLunes a Viernes: 9:00 - 18:00\nSábados: 9:00 - 13:00\nDomingos: Cerrado",
+        "telefono": "Nuestro teléfono de contacto es: 15503209",
+        "direccion": "Nuestra dirección es: San Martín 573, 3º of 29-S.M. de Tucumán"
     };
 
-    // Mostrar/ocultar chatbot
-    chatbotButton.addEventListener('click', () => {
-        chatbotWindow.style.display = chatbotWindow.style.display === 'none' ? 'block' : 'none';
-        if (chatbotWindow.style.display === 'block' && chatMessages.children.length === 0) {
-            addMessage("¡Hola! ¿En qué puedo ayudarte hoy? Selecciona una opción:", false);
-        }
-    });
-
-    closeButton.addEventListener('click', () => {
-        chatbotWindow.style.display = 'none';
-    });
-
-    // Función para agregar mensajes
-    function addMessage(text, isUser = false) {
-        const messageDiv = document.createElement('div');
-        messageDiv.style.marginBottom = '10px';
-        messageDiv.style.padding = '8px 12px';
-        messageDiv.style.borderRadius = '15px';
-        messageDiv.style.maxWidth = '80%';
-        messageDiv.style.wordWrap = 'break-word';
-
-        if (isUser) {
-            messageDiv.style.backgroundColor = '#375576';
-            messageDiv.style.color = 'white';
-            messageDiv.style.marginLeft = 'auto';
-        } else {
-            messageDiv.style.backgroundColor = '#f0f0f0';
-            messageDiv.style.marginRight = 'auto';
+    function toggleOptions() {
+            optionsContainer.classList.toggle('show');
+            const icon = document.querySelector('.expand-button i');
+            icon.classList.toggle('fa-chevron-up');
+            icon.classList.toggle('fa-chevron-down');
         }
 
-        messageDiv.textContent = text;
-        chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+        function insertKeyword(keyword) {
+    // Mostrar la respuesta en el área de mensajes
+    const response = palabrasClaveRespuestas[keyword] || "No se encontró una respuesta para esa opción.";
+    const messageElement = document.createElement('div');
+    messageElement.style.padding = '10px';
+    messageElement.style.marginBottom = '5px';
+    messageElement.style.backgroundColor = '#f1f1f1';
+    messageElement.style.borderRadius = '8px';
+    messageElement.innerText = response;
+    chatMessages.appendChild(messageElement);
 
-    // Función para manejar la selección de opciones
-    function selectOption(option) {
-        const respuesta = respuestas[option];
-        addMessage(respuesta.titulo + "\n" + respuesta.contenido, false);
-    }
-</script>
-    <script>
-        const mobileMenu = document.getElementById('mobile-menu');
-        const navMenu = document.querySelector('.nav-menu');
+}
 
-        mobileMenu.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+        chatbotButton.addEventListener('click', () => {
+            const isVisible = chatbotWindow.style.display === 'block';
+            chatbotWindow.style.display = isVisible ? 'none' : 'block';
+            
+            // Mostrar mensaje de bienvenida solo cuando se abre por primera vez
+            if (!isVisible && chatMessages.children.length === 0) {
+                addMessage("¡Bienvenido a la Escribanía! 👋\nSoy tu asistente virtual y estoy aquí para ayudarte.\nPuedes seleccionar una opción del menú inferior.", false);
+            }
         });
-    </script>
+
+        closeButton.addEventListener('click', () => {
+            chatbotWindow.style.display = 'none';
+        });
+
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.marginBottom = '10px';
+            messageDiv.style.padding = '8px 12px';
+            messageDiv.style.borderRadius = '15px';
+            messageDiv.style.maxWidth = '80%';
+            messageDiv.style.whiteSpace = 'pre-wrap';
+            messageDiv.style.wordWrap = 'break-word';
+
+            if (isUser) {
+                messageDiv.style.backgroundColor = '#375576';
+                messageDiv.style.color = 'white';
+                messageDiv.style.marginLeft = 'auto';
+            } else {
+                messageDiv.style.backgroundColor = '#f0f0f0';
+                messageDiv.style.marginRight = 'auto';
+            }
+
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const mensaje = userInput.value.trim().toLowerCase();
+            
+            if (mensaje) {
+                addMessage(userInput.value.trim(), true);
+                
+                let respuestaEncontrada = false;
+                for (let palabraClave in palabrasClaveRespuestas) {
+                    if (mensaje.includes(palabraClave)) {
+                        addMessage(palabrasClaveRespuestas[palabraClave], false);
+                        respuestaEncontrada = true;
+                        break;
+                    }
+                }
+                
+                if (!respuestaEncontrada) {
+                    addMessage("Lo siento, no entiendo tu consulta. Por favor, selecciona una de las opciones disponibles en el menú inferior ↓", false);
+                }
+                
+                userInput.value = '';
+            }
+        }
+
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+</script>
+
 
     <section class="hero" id="inicio">
         <div class="hero-content">
